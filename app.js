@@ -28,17 +28,11 @@ function criarCard(jogo) {
     description.textContent = 'Description: ' + jogo.shortDescription
     img.src = jogo.imgUrl
 
-    gameInfo.appendChild(title)
-    gameInfo.appendChild(year)
-    gameInfo.appendChild(genre)
-    gameInfo.appendChild(platforms)
-    gameInfo.appendChild(score)
-    gameInfo.appendChild(description)
+    gameInfo.append(title, year, genre, platforms, score, description)
 
-    card.appendChild(gameInfo)
-    card.appendChild(img)
+    card.append(gameInfo, img)
 
-    container.appendChild(card)
+    container.append(card)
 }
 
 jogos.forEach(criarCard)
