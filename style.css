@@ -42,6 +42,7 @@ main h1 {
     font-size: 1.2rem;
     border-radius: 16px;
     margin-bottom: 30px;
+    justify-content: space-between;
 }
 
 .game-info {
