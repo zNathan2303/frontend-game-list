@@ -1,5 +1,7 @@
 'use strict'
 
+import jogos from './jogos.json' with {type: "json"}
+
 const PLACEHOLDER_GAME_IMG = './img/placeholder_game_error_225x300.jpg'
 
 function criarCard(jogo) {
@@ -36,7 +38,10 @@ function mostrarJogos(jogos) {
 axios.get('http://localhost:8080/games')
     .then((response) => {
         mostrarJogos(response.data)
+        console.log('Os jogos exibidos são do banco de dados!')
     })
     .catch((error) => {
         console.log('Ocorreu um erro ao carregar os jogos: ' + error)
+        mostrarJogos(jogos)
+        console.log('Os jogos exibidos são do arquivo JSON!')
     })
