@@ -36,10 +36,10 @@ function criarCards(jogo) {
         axios.get(URL_API + '/games/' + id)
             .then((response) => {
                 mostrarModal(response.data)
-                console.log('ID PEGO COM SUCESSO')
+                console.log('Dados do jogo pegos com sucesso!')
             })
             .catch((error) => {
-                console.log('ERRO AO PEGAR ID')
+                console.log('ERROR: Erro ao pegar dados do jogo com o ID: ' + error)
             })
         mostrarModal(jogo)
     })
@@ -48,6 +48,8 @@ function criarCards(jogo) {
 }
 
 function mostrarModal(jogo) {
+    document.documentElement.style.setProperty('--modal-scroll-state', 'hidden')
+
     const modal = document.getElementById('modal-game')
     const title = document.getElementById('modal-game-title')
     const year = document.getElementById('modal-year')
@@ -57,8 +59,8 @@ function mostrarModal(jogo) {
     const description = document.getElementById('modal-description')
     const imagem = document.getElementById('modal-game-img')
 
-    modal.classList.add('modal-habilitado')
-    modal.classList.remove('modal-desabilitado')
+    // Ativa o modal na tela
+    document.documentElement.style.setProperty('--modal-visible', 'grid')
 
     title.textContent = jogo.title
     year.textContent = `Year: ${jogo.year || 'N/A'}`
@@ -70,24 +72,29 @@ function mostrarModal(jogo) {
 
     window.onclick = function (event) {
         if (event.target == modal) {
-            modal.classList.remove('modal-habilitado')
-            modal.classList.add('modal-desabilitado')
+            document.documentElement.style.setProperty('--modal-scroll-state', 'visible')
+            document.documentElement.style.setProperty('--modal-visible', 'none')
         }
     }
-
 }
 
 function mostrarJogos(jogos) {
     jogos.forEach(criarCards)
 }
 
+function mudarTitulo(cor, fonte) {
+    const title = document.getElementById('title')
+    title.textContent = `Os jogos exibidos são do ${fonte}!`
+    document.documentElement.style.setProperty('--title-color', cor)
+}
+
 axios.get(URL_API + '/games')
     .then((response) => {
         mostrarJogos(response.data)
-        console.log('Os jogos exibidos são do banco de dados!')
+        mudarTitulo('lightgreen', 'banco de dados')
     })
     .catch((error) => {
         console.log('Ocorreu um erro ao carregar os jogos: ' + error)
         mostrarJogos(jogos)
-        console.log('Os jogos exibidos são do arquivo JSON!')
+        mudarTitulo('lightblue', 'arquivo JSON')
     })
