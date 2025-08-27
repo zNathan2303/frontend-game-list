@@ -8,6 +8,7 @@
     --title-color: black;
     --modal-visible: none;
     --modal-scroll-state: visible;
+    --btn-color: rgb(255, 169, 153);
 }
 
 body {
@@ -39,6 +40,33 @@ main h1 {
     padding: 30px;
     color: var(--title-color);
 }
+
+.list-buttons {
+    display: flex;
+    padding-bottom: 24px;
+    gap: 12px;
+}
+
+.btn {
+    padding: 12px 24px;
+    background-color: var(--btn-color);
+    border: 2px solid;
+    font-weight: 700;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: 0.1s;
+    user-select: none;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+}
+
+.btn:active {
+    transform: translateY(-1px);
+}
+
 
 .card {
     display: flex;

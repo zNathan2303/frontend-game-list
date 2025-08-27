@@ -2,10 +2,11 @@
 
 import jogos from './jogos.json' with {type: "json"}
 
-const PLACEHOLDER_GAME_IMG = './img/placeholder_game_error_225x300.jpg'
 const URL_API = 'http://localhost:8080'
 
 function criarCards(jogo) {
+    const PLACEHOLDER_GAME_IMG = './img/placeholder_game_error_225x300.jpg'
+
     const container = document.getElementById('container')
 
     const card = document.createElement('div')
@@ -82,6 +83,27 @@ function mostrarJogos(jogos) {
     jogos.forEach(criarCards)
 }
 
+function criarBotoes(lista) {
+    const buttons = document.getElementById('list-buttons')
+    const button = document.createElement('div')
+
+    button.className = 'btn'
+    button.textContent = lista.name
+    button.dataset.listId = lista.id
+
+    buttons.append(button)
+}
+
+function mostrarBotoes() {
+    axios.get(URL_API + '/lists')
+        .then((response) => {
+            response.data.forEach(criarBotoes)
+        })
+        .catch((error) => {
+            console.log('ERROR: Não foi possível obter as categorias dos jogos: ' + error)
+        })
+}
+
 function mudarTitulo(cor, fonte) {
     const title = document.getElementById('title')
     title.textContent = `Os jogos exibidos são do ${fonte}!`
@@ -92,6 +114,7 @@ axios.get(URL_API + '/games')
     .then((response) => {
         mostrarJogos(response.data)
         mudarTitulo('lightgreen', 'banco de dados')
+        mostrarBotoes()
     })
     .catch((error) => {
         console.log('Ocorreu um erro ao carregar os jogos: ' + error)
