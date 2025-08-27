@@ -91,6 +91,34 @@ function criarBotoes(lista) {
     button.textContent = lista.name
     button.dataset.listId = lista.id
 
+    button.addEventListener('click', () => {
+        axios.get(URL_API + '/lists/' + button.dataset.listId + '/games')
+            .then((response) => {
+                if (button.classList.contains('btn-ativo')) {
+                    document.querySelectorAll('.card').forEach(card => card.remove())
+                    document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('btn-ativo'))
+                    axios.get(URL_API + '/games')
+                        .then((response) => {
+                            mostrarJogos(response.data)
+                            mudarTitulo('lightgreen', 'banco de dados')
+                        })
+                        .catch((error) => {
+                            console.log('Ocorreu um erro ao carregar os jogos: ' + error)
+                            mostrarJogos(jogos)
+                            mudarTitulo('lightblue', 'arquivo JSON')
+                        })
+                } else {
+                    document.querySelectorAll('.card').forEach(card => card.remove())
+                    mostrarJogos(response.data)
+                    document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('btn-ativo'))
+                    button.classList.add('btn-ativo')
+                }
+            })
+            .catch((error) => {
+                console.log('ERROR: Ocorreu um erro ao carregar a lista de jogos da categoria específica: ' + error)
+            })
+    })
+
     buttons.append(button)
 }
 
