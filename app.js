@@ -31,6 +31,7 @@ function criarCards(jogo) {
     card.append(gameInfo, imagem)
 
     card.dataset.gameId = jogo.id
+    card.setAttribute('draggable', 'true');
 
     card.addEventListener('click', () => {
         const id = card.dataset.gameId

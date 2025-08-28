@@ -82,6 +82,11 @@ main h1 {
     background-color: white;
 }
 
+.card.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+}
+
 .game-info {
     display: flex;
     flex-direction: column;
