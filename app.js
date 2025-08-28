@@ -4,10 +4,10 @@ import jogos from './jogos.json' with {type: "json"}
 
 const URL_API = 'http://localhost:8080'
 
+const container = document.getElementById('container')
+
 function criarCards(jogo) {
     const PLACEHOLDER_GAME_IMG = './img/placeholder_game_error_225x300.jpg'
-
-    const container = document.getElementById('container')
 
     const card = document.createElement('div')
     const gameInfo = document.createElement('div')
@@ -31,7 +31,7 @@ function criarCards(jogo) {
     card.append(gameInfo, imagem)
 
     card.dataset.gameId = jogo.id
-    card.setAttribute('draggable', 'true');
+    card.setAttribute('draggable', 'true')
 
     card.addEventListener('click', () => {
         const id = card.dataset.gameId
@@ -68,7 +68,7 @@ function mostrarModal(jogo) {
     year.textContent = `Year: ${jogo.year || 'N/A'}`
     genres.textContent = `Genres: ${jogo.genre || 'N/A'}`
     platforms.textContent = `Platforms: ${jogo.platforms || 'N/A'}`
-    score.textContent = `Platforms: ${jogo.score || 'N/A'}`
+    score.textContent = `Score: ${jogo.score || 'N/A'}`
     description.textContent = `Description: ${jogo.longDescription || 'N/A'}`
     imagem.src = jogo.imgUrl || PLACEHOLDER_GAME_IMG
 
@@ -150,3 +150,31 @@ axios.get(URL_API + '/games')
         mostrarJogos(jogos)
         mudarTitulo('lightblue', 'arquivo JSON')
     })
+
+document.addEventListener('dragstart', element => element.target.classList.add('dragging'))
+document.addEventListener('dragend', element => element.target.classList.remove('dragging'))
+
+container.addEventListener('dragover', element => {
+    const dragging = document.querySelector('.dragging')
+    const applyAfter = getNewPosition(element.clientY)
+
+    if (applyAfter) {
+        applyAfter.insertAdjacentElement('afterend', dragging)
+    } else {
+        container.prepend(dragging)
+    }
+})
+
+function getNewPosition(posY) {
+    const cards = container.querySelectorAll('.card:not(.dragging)')
+    let result
+
+    for (let card of cards) {
+        const box = card.getBoundingClientRect()
+        const boxCenterY = box.y + box.height / 2
+
+        if (posY >= boxCenterY) result = card
+    }
+
+    return result
+}
