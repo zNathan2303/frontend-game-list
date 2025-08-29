@@ -93,7 +93,7 @@ function criarBotoes(lista) {
     button.dataset.listId = lista.id
 
     button.addEventListener('click', () => {
-        axios.get(URL_API + '/lists/' + button.dataset.listId + '/games')
+        axios.get(`${URL_API}/lists/${button.dataset.listId}/games`)
             .then((response) => {
                 if (button.classList.contains('btn-ativo')) {
                     document.querySelectorAll('.card').forEach(card => card.remove())
@@ -151,8 +151,24 @@ axios.get(URL_API + '/games')
         mudarTitulo('lightblue', 'arquivo JSON')
     })
 
-document.addEventListener('dragstart', element => element.target.classList.add('dragging'))
-document.addEventListener('dragend', element => element.target.classList.remove('dragging'))
+monitorPageDragAndDrop()
+
+function monitorPageDragAndDrop() {
+    let sourceIndex
+    let destinationIndex
+
+    document.addEventListener('dragstart', element => {
+        element.target.classList.add('dragging')
+        sourceIndex = getElementIndex(document.querySelector('.dragging'))
+    })
+    document.addEventListener('dragend', element => {
+        destinationIndex = getElementIndex(document.querySelector('.dragging'))
+        element.target.classList.remove('dragging')
+        if (document.querySelector('.btn-ativo')) {
+            alterarOrdemDosJogos(document.querySelector('.btn-ativo').dataset.listId, sourceIndex, destinationIndex)
+        }
+    })
+}
 
 container.addEventListener('dragover', element => {
     const dragging = document.querySelector('.dragging')
@@ -177,4 +193,24 @@ function getNewPosition(posY) {
     }
 
     return result
+}
+
+function alterarOrdemDosJogos(listId, sourceIndex, destinationIndex) {
+    const data = {
+        sourceIndex: sourceIndex,
+        destinationIndex: destinationIndex
+    }
+    axios.put(`${URL_API}/lists/${listId}/replacement`, data)
+        .then((response) => {
+            console.log('A ordem dos jogos foi alterada com sucesso!')
+        })
+        .catch((error) => {
+            console.log('ERROR: Ocorreu um erro ao alterar a ordem dos jogos: ' + error)
+        })
+}
+
+function getElementIndex(elemento) {
+    const pai = elemento.parentNode;
+    const filhos = Array.from(pai.children);
+    return filhos.indexOf(elemento);
 }
